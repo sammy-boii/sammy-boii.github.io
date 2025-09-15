@@ -1,5 +1,705 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚧 SCRAM! Not Done Yet! 🚧</title>
+    <style>
+        /* --- Import a goofy, comic-style font --- */
+        @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+
+        /* --- Basic Setup & Fun Background --- */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Bangers', cursive, sans-serif;
+            background-color: #f7dc6f; /* Cheerful Yellow */
+            background-image: 
+                radial-gradient(circle at 1px 1px, rgba(0,0,0,0.2) 1px, transparent 0);
+            background-size: 20px 20px; /* Halftone comic dot pattern */
+            overflow: hidden; /* Hides anything that spills out */
+            text-align: center;
+            position: relative;
+        }
+
+        /* --- Floating Speech Bubbles --- */
+        .speech-bubble {
+            position: absolute;
+            background: white;
+            border: 4px solid black;
+            border-radius: 20px;
+            padding: 15px 25px;
+            font-size: 1.5rem;
+            color: black;
+            opacity: 0;
+            animation: float-appear 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 30px;
+            border: 15px solid transparent;
+            border-top-color: white;
+        }
+
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -19px;
+            left: 26px;
+            border: 19px solid transparent;
+            border-top-color: black;
+        }
+
+        .speech-1 {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .speech-2 {
+            top: 15%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .speech-3 {
+            bottom: 20%;
+            left: 5%;
+            animation-delay: 4s;
+        }
+
+        /* --- Bouncing Emojis --- */
+        .bouncing-emoji {
+            position: absolute;
+            font-size: 4rem;
+            animation: bounce-around 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .emoji-1 {
+            top: 5%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .emoji-2 {
+            top: 10%;
+            right: 10%;
+            animation-delay: 1s;
+        }
+
+        .emoji-3 {
+            bottom: 15%;
+            right: 5%;
+            animation-delay: 2s;
+        }
+
+        .emoji-4 {
+            bottom: 10%;
+            left: 15%;
+            animation-delay: 3s;
+        }
+
+        /* --- Main Content Container --- */
+        .container {
+            position: relative;
+            padding: 40px;
+            background: white;
+            border: 8px solid black;
+            box-shadow: 15px 15px 0px 0px #e74c3c; /* Comic-style drop shadow */
+            transform: rotate(-2deg); /* A jaunty angle */
+            max-width: 80%;
+            z-index: 20;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .container:hover {
+            transform: rotate(-2deg) scale(1.05);
+            box-shadow: 20px 20px 0px 0px #e74c3c;
+        }
+
+        /* --- The Big "Go Away" Message --- */
+        h1 {
+            font-size: clamp(3rem, 15vw, 10rem); /* Responsive font size */
+            margin: 0;
+            color: #3498db; /* Bright Blue */
+            -webkit-text-stroke: 4px black; /* Classic comic outline */
+            text-shadow: 6px 6px 0px #e74c3c; /* Pop-out shadow */
+            animation: text-wobble 1.5s ease-in-out infinite;
+            user-select: none;
+        }
+
+        /* --- The Funnier Subtitle --- */
+        p {
+            font-size: clamp(1.2rem, 5vw, 2.5rem);
+            margin: 10px 0 0;
+            color: #2c3e50;
+            -webkit-text-stroke: 1.5px white;
+            letter-spacing: 2px;
+            user-select: none;
+        }
+
+        /* --- Wobbly Eyes That Follow You --- */
+        .eyes {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+
+        .eye {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border: 6px solid black;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden; /* Keeps the pupil inside */
+            animation: eye-bounce 2s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            cursor: pointer;
+        }
+
+        .eye:hover {
+            animation-duration: 0.3s;
+        }
+
+        .pupil {
+            width: 40px;
+            height: 40px;
+            background: black;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 4px solid white;
+            transition: all 0.1s ease;
+        }
+
+        /* --- Frantic Construction Worker --- */
+        .worker {
+            position: absolute;
+            bottom: -50px;
+            right: -60px;
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+        }
+
+        .hammer {
+            position: absolute;
+            font-size: 50px;
+            top: 10px;
+            left: 40px;
+            transform-origin: bottom right;
+            animation: hammer-swing 0.3s infinite;
+            user-select: none;
+        }
+
+        .worker:hover .hammer {
+            animation-duration: 0.1s;
+            font-size: 60px;
+        }
+
+        /* --- Construction Tape --- */
+        .construction-tape {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%) rotate(3deg);
+            background: #f1c40f;
+            color: black;
+            padding: 10px 2000px; /* Make it ridiculously long to cover the screen */
+            font-size: 2rem;
+            white-space: nowrap;
+            border-top: 4px solid black;
+            border-bottom: 4px solid black;
+            box-shadow: 0 10px 10px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+            animation: tape-scroll 15s linear infinite;
+        }
+
+        /* --- Interactive Buttons --- */
+        .button-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 30;
+        }
+
+        .goofy-button {
+            background: #e74c3c;
+            color: white;
+            border: 4px solid black;
+            padding: 15px 25px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transform: rotate(-2deg);
+            transition: all 0.2s ease;
+            box-shadow: 5px 5px 0px black;
+            text-transform: uppercase;
+        }
+
+        .goofy-button:hover {
+            transform: rotate(-2deg) scale(1.1);
+            box-shadow: 8px 8px 0px black;
+            background: #c0392b;
+        }
+
+        .goofy-button:active {
+            transform: rotate(-2deg) scale(0.95);
+            box-shadow: 2px 2px 0px black;
+        }
+
+        /* --- Flying Tools --- */
+        .flying-tool {
+            position: absolute;
+            font-size: 3rem;
+            animation: fly-across 8s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .tool-1 {
+            top: 20%;
+            animation-delay: 0s;
+        }
+
+        .tool-2 {
+            top: 40%;
+            animation-delay: 3s;
+        }
+
+        .tool-3 {
+            top: 60%;
+            animation-delay: 6s;
+        }
+
+        /* --- Explosion Effect --- */
+        .explosion {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .explosion-particle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #f39c12;
+            border: 2px solid black;
+            border-radius: 50%;
+            animation: explode 1s ease-out forwards;
+        }
+
+        /* --- Progress Bar Joke --- */
+        .fake-progress {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 30px;
+            background: white;
+            border: 4px solid black;
+            border-radius: 15px;
+            overflow: hidden;
+            z-index: 25;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #2ecc71, #27ae60);
+            background-size: 20px 20px;
+            animation: fake-loading 3s ease-in-out infinite;
+            border-radius: 10px;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1rem;
+            color: black;
+            font-weight: bold;
+            z-index: 26;
+        }
+
+        /* --- Keyframe Animations --- */
+        
+        /* For the wobbly main text */
+        @keyframes text-wobble {
+            0%, 100% { transform: scale(1) rotate(-1deg); }
+            50% { transform: scale(1.05) rotate(1deg); }
+        }
+
+        /* For the bouncy eyes */
+        @keyframes eye-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* For the frantic hammer */
+        @keyframes hammer-swing {
+            0%, 100% { transform: rotate(10deg); }
+            50% { transform: rotate(-45deg); }
+        }
+
+        /* For scrolling tape */
+        @keyframes tape-scroll {
+            0% { transform: translateX(-50%) rotate(3deg); }
+            100% { transform: translateX(-60%) rotate(3deg); }
+        }
+
+        /* For floating speech bubbles */
+        @keyframes float-appear {
+            0%, 80%, 100% { opacity: 0; transform: translateY(20px); }
+            20%, 60% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* For bouncing emojis */
+        @keyframes bounce-around {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-30px) rotate(10deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-15px) rotate(-5deg); }
+        }
+
+        /* For flying tools */
+        @keyframes fly-across {
+            0% { left: -10%; transform: rotate(0deg); }
+            100% { left: 110%; transform: rotate(360deg); }
+        }
+
+        /* For explosion particles */
+        @keyframes explode {
+            0% { opacity: 1; transform: scale(0); }
+            100% { opacity: 0; transform: scale(2) translateX(var(--x)) translateY(var(--y)); }
+        }
+
+        /* For fake progress bar */
+        @keyframes fake-loading {
+            0% { width: 0%; }
+            50% { width: 75%; }
+            90% { width: 95%; }
+            100% { width: 95%; }
+        }
+
+        /* --- Screen Shake Effect --- */
+        .shake {
+            animation: screen-shake 0.5s ease-in-out;
+        }
+
+        @keyframes screen-shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                max-width: 90%;
+            }
+            
+            .eye {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .pupil {
+                width: 25px;
+                height: 25px;
+            }
+            
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .fake-progress {
+                width: 250px;
+            }
+        }
+
+    </style>
+</head>
 <body>
-Placeholder
+
+    <!-- Floating Speech Bubbles -->
+    <div class="speech-bubble speech-1">NOPE!</div>
+    <div class="speech-bubble speech-2">STILL CODING!</div>
+    <div class="speech-bubble speech-3">GO DRINK COFFEE!</div>
+
+    <!-- Bouncing Emojis -->
+    <div class="bouncing-emoji emoji-1">🔧</div>
+    <div class="bouncing-emoji emoji-2">⚠️</div>
+    <div class="bouncing-emoji emoji-3">🚨</div>
+    <div class="bouncing-emoji emoji-4">💻</div>
+
+    <!-- Flying Tools -->
+    <div class="flying-tool tool-1">🔨</div>
+    <div class="flying-tool tool-2">🔧</div>
+    <div class="flying-tool tool-3">⚡</div>
+
+    <!-- Fake Progress Bar -->
+    <div class="fake-progress">
+        <div class="progress-bar"></div>
+        <div class="progress-text">Loading... 95%</div>
+    </div>
+
+    <div class="container" id="mainContainer">
+        <div class="eyes">
+            <div class="eye" onclick="wink(this)">
+                <div class="pupil"></div>
+            </div>
+            <div class="eye" onclick="wink(this)">
+                <div class="pupil"></div>
+            </div>
+        </div>
+
+        <h1 id="mainTitle">GO AWAY!</h1>
+        <p id="subtitle">It's under construction, ya silly goose! 🦆</p>
+        
+        <div class="worker" onclick="hammerTime()">
+            <div class="hammer">🔨</div>
+        </div>
+    </div>
+    
+    <div class="construction-tape">
+        <span>DANGER! DANGER! WEB STUFF HAPPENING! DANGER! DANGER! UNDER CONSTRUCTION! PLEASE STAND BACK! </span>
+    </div>
+
+    <!-- Interactive Buttons -->
+    <div class="button-container">
+        <button class="goofy-button" onclick="changeMessage()">ANNOY ME!</button>
+        <button class="goofy-button" onclick="explode()">EXPLODE!</button>
+        <button class="goofy-button" onclick="randomChaos()">CHAOS!</button>
+    </div>
+
+    <!-- Explosion Container -->
+    <div class="explosion" id="explosionContainer"></div>
+
+    <script>
+        // --- JavaScript for the Cursor-Following Eyes ---
+        const pupils = document.querySelectorAll('.pupil');
+
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+
+            pupils.forEach(pupil => {
+                // Get the position and dimensions of the eye
+                const { left, top, width, height } = pupil.parentElement.getBoundingClientRect();
+                
+                // Calculate the center of the eye
+                const eyeCenterX = left + width / 2;
+                const eyeCenterY = top + height / 2;
+
+                // Calculate the angle between the mouse and the eye's center
+                const deltaX = mouseX - eyeCenterX;
+                const deltaY = mouseY - eyeCenterY;
+                const angle = Math.atan2(deltaY, deltaX);
+
+                // Calculate the maximum distance the pupil can move from the center
+                // This keeps the pupil within the eyeball
+                const maxPupilMove = (width / 2) - (pupil.offsetWidth / 2);
+
+                // Calculate the new position for the pupil
+                const pupilX = Math.cos(angle) * maxPupilMove;
+                const pupilY = Math.sin(angle) * maxPupilMove;
+                
+                // Apply the new position using transform for smooth animation
+                pupil.style.transform = `translate(${pupilX}px, ${pupilY}px)`;
+            });
+        });
+
+        // --- Funny Messages Array ---
+        const messages = [
+            { title: "GO AWAY!", subtitle: "It's under construction, ya silly goose! 🦆" },
+            { title: "NOPE!", subtitle: "Still hammering away at this thing! 🔨" },
+            { title: "BUZZ OFF!", subtitle: "Can't you see I'm busy coding? 💻" },
+            { title: "SCRAM!", subtitle: "This website isn't ready for your eyeballs! 👀" },
+            { title: "SHOO!", subtitle: "Come back when it's actually done! ⏰" },
+            { title: "NOT YET!", subtitle: "Patience is a virtue, you know! 😤" },
+            { title: "BEGONE!", subtitle: "I'm creating digital magic here! ✨" },
+            { title: "VAMOOSE!", subtitle: "Construction zone - hard hats required! ⛑️" }
+        ];
+
+        let currentMessageIndex = 0;
+        let clickCount = 0;
+
+        // --- Change Message Function ---
+        function changeMessage() {
+            currentMessageIndex = (currentMessageIndex + 1) % messages.length;
+            document.getElementById('mainTitle').textContent = messages[currentMessageIndex].title;
+            document.getElementById('subtitle').textContent = messages[currentMessageIndex].subtitle;
+            
+            // Screen shake effect
+            document.body.classList.add('shake');
+            setTimeout(() => document.body.classList.remove('shake'), 500);
+        }
+
+        // --- Eye Wink Function ---
+        function wink(eye) {
+            eye.style.transform = 'scaleY(0.1)';
+            setTimeout(() => {
+                eye.style.transform = '';
+            }, 300);
+        }
+
+        // --- Hammer Time Function ---
+        function hammerTime() {
+            const hammer = document.querySelector('.hammer');
+            hammer.style.fontSize = '80px';
+            hammer.style.animation = 'hammer-swing 0.05s infinite';
+            
+            setTimeout(() => {
+                hammer.style.fontSize = '50px';
+                hammer.style.animation = 'hammer-swing 0.3s infinite';
+            }, 1000);
+        }
+
+        // --- Explosion Function ---
+        function explode() {
+            const container = document.getElementById('explosionContainer');
+            container.innerHTML = ''; // Clear previous explosions
+            
+            // Create explosion particles
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'explosion-particle';
+                
+                // Random direction for each particle
+                const x = (Math.random() - 0.5) * 200;
+                const y = (Math.random() - 0.5) * 200;
+                particle.style.setProperty('--x', x + 'px');
+                particle.style.setProperty('--y', y + 'px');
+                
+                // Random color
+                const colors = ['#f39c12', '#e74c3c', '#f1c40f', '#e67e22'];
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                container.appendChild(particle);
+                
+                // Remove particle after animation
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 1000);
+            }
+            
+            // Screen shake
+            document.body.classList.add('shake');
+            setTimeout(() => document.body.classList.remove('shake'), 500);
+        }
+
+        // --- Random Chaos Function ---
+        function randomChaos() {
+            clickCount++;
+            
+            // Random background color change
+            const colors = ['#f7dc6f', '#85c1e9', '#f8c471', '#82e0aa', '#d7bde2'];
+            document.body.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Spin the main container
+            const container = document.getElementById('mainContainer');
+            container.style.transform = `rotate(${Math.random() * 720 - 360}deg) scale(${0.8 + Math.random() * 0.4})`;
+            
+            setTimeout(() => {
+                container.style.transform = 'rotate(-2deg) scale(1)';
+            }, 2000);
+            
+            // Random message
+            changeMessage();
+            
+            // Maybe explode too!
+            if (Math.random() < 0.3) {
+                setTimeout(() => explode(), 500);
+            }
+        }
+
+        // --- Secret Konami Code ---
+        let konamiCode = [];
+        const konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
+        
+        document.addEventListener('keydown', function(e) {
+            konamiCode.push(e.code);
+            if (konamiCode.length > konami.length) {
+                konamiCode.shift();
+            }
+            
+            if (konamiCode.join(',') === konami.join(',')) {
+                document.getElementById('mainTitle').textContent = 'SECRET UNLOCKED!';
+                document.getElementById('subtitle').textContent = 'You found the Konami Code! 🎮';
+                
+                // Rainbow mode
+                document.body.style.filter = 'hue-rotate(0deg)';
+                let hue = 0;
+                const rainbowInterval = setInterval(() => {
+                    hue += 10;
+                    document.body.style.filter = `hue-rotate(${hue}deg)`;
+                    if (hue >= 360) {
+                        clearInterval(rainbowInterval);
+                        document.body.style.filter = '';
+                    }
+                }, 100);
+                
+                explode();
+            }
+        });
+
+        // --- Click Counter Easter Egg ---
+        document.getElementById('mainContainer').addEventListener('click', () => {
+            clickCount++;
+            if (clickCount === 10) {
+                document.getElementById('subtitle').textContent = 'Wow, you really like clicking things! 🖱️';
+            } else if (clickCount === 20) {
+                document.getElementById('subtitle').textContent = 'Okay, you can stop now... 😅';
+            } else if (clickCount === 50) {
+                document.getElementById('mainTitle').textContent = 'FINE!';
+                document.getElementById('subtitle').textContent = 'You win! Here\'s a cookie: 🍪';
+                explode();
+            }
+        });
+
+        // --- Auto Chaos Mode ---
+        let chaosMode = false;
+        setTimeout(() => {
+            if (!chaosMode) {
+                setInterval(() => {
+                    if (Math.random() < 0.1) { // 10% chance every 2 seconds
+                        randomChaos();
+                    }
+                }, 2000);
+            }
+        }, 10000); // Start after 10 seconds
+
+    </script>
+
 </body>
 </html>
